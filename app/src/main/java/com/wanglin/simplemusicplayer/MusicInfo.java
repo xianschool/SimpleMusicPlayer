@@ -23,6 +23,14 @@ public class MusicInfo {
         Singer = singer;
     }
 
+    public String getFilrname() {
+        return Filrname;
+    }
+
+    public void setFilrname(String filrname) {
+        Filrname = filrname;
+    }
+
     public int getDuration() {
         return Duration;
     }
