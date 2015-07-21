@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -117,7 +118,7 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, Uri.parse("content://media/"));
+                Intent intent = new Intent(Intent.ACTION_PICK, Uri.parse("MusicListActivity://"));
                 startActivityForResult(intent, LIST_CLICKED);
             }
         });

@@ -29,7 +29,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.PICK"/>
                 <category android:name="android.intent.category.DEFAULT"/>
-                <data android:path="media" android:scheme="content"/>
+                <data android:scheme="MusicListActivity"/>
             </intent-filter>
         </activity>
     </application>
