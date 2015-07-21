@@ -22,6 +22,16 @@
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <activity
+            android:name=".MusicListActivity"
+            android:label="@string/title_activity_music_list" >
+            <intent-filter>
+                <action android:name="android.intent.action.PICK"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:path="media" android:scheme="content"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

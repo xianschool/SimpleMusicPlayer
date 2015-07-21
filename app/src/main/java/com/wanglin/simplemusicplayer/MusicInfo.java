@@ -5,7 +5,7 @@ package com.wanglin.simplemusicplayer;
  */
 public class MusicInfo {
 
-    private String Filrname;                            //文件名
+    private String Filename;                            //文件名
     private String Title;                                   //歌曲名称
     private String Singer;                               //歌手名称
     private  int Duration;                               //时间长度
@@ -23,12 +23,12 @@ public class MusicInfo {
         Singer = singer;
     }
 
-    public String getFilrname() {
-        return Filrname;
+    public String getFilename() {
+        return Filename;
     }
 
-    public void setFilrname(String filrname) {
-        Filrname = filrname;
+    public void setFilename(String filename) {
+        Filename = filename;
     }
 
     public int getDuration() {
