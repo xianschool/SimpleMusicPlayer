@@ -1,8 +1,11 @@
 package com.wanglin.simplemusicplayer;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -11,24 +14,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 
 public class MainActivity extends ActionBarActivity {
 
-    List<Object> musicList = new ArrayList<>();
-    List<Map<String, Object>> list = new ArrayList<>();
     Button play, stop, next, previous,mList;
     ActivityReceiver activityReceiver;
     public static final String CTL_ACTION = "com.wanglin.action.CTL_ACTION";
     public static final String UPDATE_ACTION = "com.wanglin.action.UPDATE_ACTION";
     public static final int isPlaying = 10;
     public static final int isPaused = 11;
-    public static final int isStoped = 12;
+    public static final int isStopped = 12;
     public static final int PLAY_CLICKED = 1;
     public static final int NEXT_CLICKED = 2;
     public static final int STOP_CLICKED = 3;
@@ -43,6 +44,13 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         clickListener();
+
+        activityReceiver = new ActivityReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(UPDATE_ACTION);
+        registerReceiver(activityReceiver, filter);
+        intentService = new Intent(this, MusicService.class);
+        startService(intentService);
     }
 
     @Override
@@ -130,7 +138,49 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
 
+            int update = intent.getIntExtra("update", -1);
+
+            switch (update){
+                case isPaused:{
+                    play.setText("@string/play");
+                    status = isPlaying;
+                    break;
+                }
+
+                case isPlaying:{
+                    play.setText("@string/pause");
+                    status = isPaused;
+                    break;
+            }
+
+                case isStopped:{
+                    play.setText("@string/play");
+                    status = isPlaying;
+                    break;
+                }
+            }
         }
     }
 
+    @Override
+    public void onActivityResult(int reqCode, int resCode, Intent data){
+
+    super.onActivityResult(reqCode, resCode, data);
+    switch (reqCode){
+        case (LIST_CLICKED) : {
+            if(resCode == Activity.RESULT_OK){
+
+                Uri musicData = data.getData();
+                Cursor c = getContentResolver().query(musicData, null, null, null, null);
+                c.moveToFirst();
+                String song = c.getString(c.getColumnIndexOrThrow("title"));
+                String singer = c.getString(c.getColumnIndexOrThrow("artist"));
+
+                TextView tv = (TextView) findViewById(R.id.SongInfomation);
+                tv.setText(song + " - " + singer);
+            }
+        }
+    }
+
+    }
 }
