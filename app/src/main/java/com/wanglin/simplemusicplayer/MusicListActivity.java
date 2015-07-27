@@ -31,6 +31,7 @@ public class MusicListActivity extends ActionBarActivity {
     List<MusicInfo> musicList = new ArrayList<>();
     List<Map<String, Object>> list = new ArrayList<>();
 
+
     public static final String[] AUDIO_KEYS = new String[]{
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.TITLE,
@@ -62,8 +63,13 @@ public class MusicListActivity extends ActionBarActivity {
         setContentView(R.layout.activity_music_list);
 
 
-        final Cursor c = getContentResolver().query(Media.EXTERNAL_CONTENT_URI, AUDIO_KEYS, null, null, null);
+        getMusicList();
 
+    }
+
+    public void getMusicList(){
+
+        final Cursor c = getContentResolver().query(Media.EXTERNAL_CONTENT_URI, AUDIO_KEYS, null, null, null);
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
             Bundle bundle = new Bundle ();
             for (int i = 0; i < AUDIO_KEYS.length; i++) {
@@ -115,9 +121,9 @@ public class MusicListActivity extends ActionBarActivity {
                 outData .setData(outURI);
                 setResult(Activity.RESULT_OK,  outData);
                 finish();
+
             }
         });
-
     }
 
     @Override

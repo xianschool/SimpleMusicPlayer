@@ -44,13 +44,14 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         clickListener();
-
+/*
         activityReceiver = new ActivityReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(UPDATE_ACTION);
         registerReceiver(activityReceiver, filter);
         intentService = new Intent(this, MusicService.class);
         startService(intentService);
+*/
     }
 
     @Override
