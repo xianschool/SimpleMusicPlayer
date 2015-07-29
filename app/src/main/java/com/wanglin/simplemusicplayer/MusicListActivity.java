@@ -28,8 +28,8 @@ import java.util.Map;
 public class MusicListActivity extends ActionBarActivity {
 
 
-    List<MusicInfo> musicList = new ArrayList<>();
-    List<Map<String, Object>> list = new ArrayList<>();
+    public static List<MusicInfo> musicList = new ArrayList<>();
+    public static List<Map<String, Object>> list = new ArrayList<>();
 
 
     public static final String[] AUDIO_KEYS = new String[]{

@@ -35,6 +35,8 @@ public class MainActivity extends ActionBarActivity {
     public static final int STOP_CLICKED = 3;
     public static final int PREVIOUS_CLICKED = 4;
     public static final int LIST_CLICKED = 5;
+    public static String path;
+    public static Cursor c;
     Intent intentService;
     int status;
 
@@ -95,7 +97,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CTL_ACTION);
-                intent.putExtra("control",STOP_CLICKED);
+                intent.putExtra("control", STOP_CLICKED);
                 sendBroadcast(intent);
             }
         });
@@ -172,10 +174,11 @@ public class MainActivity extends ActionBarActivity {
             if(resCode == Activity.RESULT_OK){
 
                 Uri musicData = data.getData();
-                Cursor c = getContentResolver().query(musicData, null, null, null, null);
+                c = getContentResolver().query(musicData, null, null, null, null);
                 c.moveToFirst();
                 String song = c.getString(c.getColumnIndexOrThrow("title"));
                 String singer = c.getString(c.getColumnIndexOrThrow("artist"));
+                path = c.getString(c.getColumnIndexOrThrow("_data"));
 
                 TextView tv = (TextView) findViewById(R.id.SongInfomation);
                 tv.setText(song + " - " + singer);
