@@ -46,14 +46,14 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         clickListener();
-/*
+
         activityReceiver = new ActivityReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(UPDATE_ACTION);
         registerReceiver(activityReceiver, filter);
         intentService = new Intent(this, MusicService.class);
         startService(intentService);
-*/
+
     }
 
     @Override
@@ -145,19 +145,19 @@ public class MainActivity extends ActionBarActivity {
 
             switch (update){
                 case isPaused:{
-                    play.setText("@string/play");
+                    play.setText(R.string.play);
                     status = isPlaying;
                     break;
                 }
 
                 case isPlaying:{
-                    play.setText("@string/pause");
+                    play.setText(R.string.pause);
                     status = isPaused;
                     break;
             }
 
                 case isStopped:{
-                    play.setText("@string/play");
+                    play.setText(R.string.play);
                     status = isPlaying;
                     break;
                 }

@@ -67,9 +67,9 @@ public class MusicListActivity extends ActionBarActivity {
 
     }
 
-    public void getMusicList(){
+   public void getMusicList(){
 
-        final Cursor c = getContentResolver().query(Media.EXTERNAL_CONTENT_URI, AUDIO_KEYS, null, null, null);
+       final Cursor c = getContentResolver().query(Media.EXTERNAL_CONTENT_URI, AUDIO_KEYS, null, null, null);
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
             Bundle bundle = new Bundle ();
             for (int i = 0; i < AUDIO_KEYS.length; i++) {
