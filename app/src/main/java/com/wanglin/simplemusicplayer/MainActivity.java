@@ -23,7 +23,8 @@ import java.util.Map;
 
 public class MainActivity extends ActionBarActivity {
 
-    Button play, stop, next, previous,mList;
+    public static Button play, stop, next, previous,mList;
+    public static TextView tv;
     ActivityReceiver activityReceiver;
     public static final String CTL_ACTION = "com.wanglin.action.CTL_ACTION";
     public static final String UPDATE_ACTION = "com.wanglin.action.UPDATE_ACTION";
@@ -133,6 +134,8 @@ public class MainActivity extends ActionBarActivity {
                 startActivityForResult(intent, LIST_CLICKED);
             }
         });
+
+        tv = (TextView) findViewById(R.id.SongInfomation);
     }
 
 
@@ -180,7 +183,9 @@ public class MainActivity extends ActionBarActivity {
                 String singer = c.getString(c.getColumnIndexOrThrow("artist"));
                 path = c.getString(c.getColumnIndexOrThrow("_data"));
 
-                TextView tv = (TextView) findViewById(R.id.SongInfomation);
+                MusicService.PlayMusic(path);
+                MusicService.status = isPlaying;
+
                 tv.setText(song + " - " + singer);
             }
         }

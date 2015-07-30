@@ -5,8 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.os.IBinder;
+import android.provider.MediaStore;
+import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -14,11 +17,12 @@ public class MusicService extends Service {
 
     MusicServiceReceiver serviceReceiver;
 
-    int status = MainActivity.isStopped;
-    MediaPlayer mPlayer;
-    int current = 0;
-    int count = 0;
-    int flog = 0;
+    public static int status = MainActivity.isStopped;
+    public static MediaPlayer mPlayer;
+    static int current = 0;
+    static int count = 0;
+    static int flog = 0;
+    String firstPath, firstSong, firstSinger;
 
     public MusicService() {
     }
@@ -33,6 +37,11 @@ public class MusicService extends Service {
         filter.addAction(MainActivity.CTL_ACTION);
         registerReceiver(serviceReceiver, filter);
         mPlayer = new MediaPlayer();
+        final Cursor c = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicListActivity.AUDIO_KEYS, null, null, null);
+        c.moveToFirst();
+        firstPath = c.getString(c.getColumnIndexOrThrow("_data"));
+        firstSong = c.getString(c.getColumnIndexOrThrow("title"));
+        firstSinger = c.getString(c.getColumnIndexOrThrow("artist"));
         mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -61,7 +70,6 @@ public class MusicService extends Service {
         if(flog==2){
             Intent sendIntent = new Intent(MainActivity.UPDATE_ACTION);
             sendIntent.putExtra("update", status);
-            //sendIntent.putExtra("current", current);
             sendBroadcast(sendIntent);
         }
         flog=2;
@@ -69,7 +77,7 @@ public class MusicService extends Service {
         return Service.START_STICKY;
     }
 
-    private void PlayMusic(String path){
+    public static void PlayMusic(String path){
         try
         {
 	            /* 重置MediaPlayer */
@@ -113,8 +121,15 @@ public class MusicService extends Service {
             switch (control){
                 case MainActivity.PLAY_CLICKED :{
                     if (status == MainActivity.isStopped ){
-                        PlayMusic(MainActivity.path);
-                        status = MainActivity.isPlaying;
+                        if (MainActivity.path == null){
+                            PlayMusic(firstPath);
+                            status = MainActivity.isPlaying;
+                            MainActivity.tv.setText(firstSong + " - " + firstSinger);
+                        }
+                        else {
+                            PlayMusic(MainActivity.path);
+                            status = MainActivity.isPlaying;
+                        }
                     }
                     else if (status == MainActivity.isPlaying){
                         mPlayer.pause();

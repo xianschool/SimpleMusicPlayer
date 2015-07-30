@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
@@ -119,7 +120,12 @@ public class MusicListActivity extends ActionBarActivity {
                 Uri outURI = ContentUris.withAppendedId(Media.EXTERNAL_CONTENT_URI, rowId);
                 Intent outData = new Intent();
                 outData .setData(outURI);
-                setResult(Activity.RESULT_OK,  outData);
+                setResult(Activity.RESULT_OK, outData);
+                if (MusicService.mPlayer != null){
+                    MusicService.mPlayer.stop();
+                    MusicService.status = MainActivity.isStopped;
+                    MainActivity.play.setText(R.string.pause);
+                }
                 finish();
 
             }
