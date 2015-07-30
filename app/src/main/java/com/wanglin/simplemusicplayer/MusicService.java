@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.provider.MediaStore;
-import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -23,7 +22,6 @@ public class MusicService extends Service {
     static int count = 0;
     static int flog = 0;
     String firstPath, firstSong, firstSinger;
-
     public MusicService() {
     }
 
@@ -31,29 +29,12 @@ public class MusicService extends Service {
     public void onCreate(){
 
         flog=1;
-        count = MusicListActivity.list.size();
         serviceReceiver = new MusicServiceReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(MainActivity.CTL_ACTION);
         registerReceiver(serviceReceiver, filter);
         mPlayer = new MediaPlayer();
-        final Cursor c = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicListActivity.AUDIO_KEYS, null, null, null);
-        c.moveToFirst();
-        firstPath = c.getString(c.getColumnIndexOrThrow("_data"));
-        firstSong = c.getString(c.getColumnIndexOrThrow("title"));
-        firstSinger = c.getString(c.getColumnIndexOrThrow("artist"));
-        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                current++;
-                if (current >= count) {
-                    current = 0;
-                }
-                String filename = (MusicListActivity.musicList.get(current)).getPath();
-                PlayMusic(filename);
-            }
-        });
-
+        count = current + 1;
         super.onCreate();
 
     }
@@ -93,12 +74,13 @@ public class MusicService extends Service {
                 public void onCompletion(MediaPlayer arg0)
                 {
                     //播放完成一首之后进行下一首
-                    current--;
-                    if (current < 0) {
-                        current = count;
+                    current++;
+                    if (current >= count) {
+                        current = 0;
                     }
                     PlayMusic(((MusicInfo) MusicListActivity.musicList.get(current)).getPath());
                     status = MainActivity.isPlaying;
+                    MainActivity.tv.setText(((MusicInfo) MusicListActivity.musicList.get(current)).getTitle() + " - " + ((MusicInfo) MusicListActivity.musicList.get(current)).getArtist());
                 }
             });
         }catch (IOException e){}
@@ -114,7 +96,6 @@ public class MusicService extends Service {
 
     public class MusicServiceReceiver extends BroadcastReceiver {
 
-
         @Override
         public void onReceive(Context context, Intent intent) {
             int control = intent.getIntExtra("control", -1);
@@ -122,6 +103,11 @@ public class MusicService extends Service {
                 case MainActivity.PLAY_CLICKED :{
                     if (status == MainActivity.isStopped ){
                         if (MainActivity.path == null){
+                            final Cursor c = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicListActivity.AUDIO_KEYS, null, null, null);
+                            c.moveToFirst();
+                            firstPath = c.getString(c.getColumnIndexOrThrow("_data"));
+                            firstSong = c.getString(c.getColumnIndexOrThrow("title"));
+                            firstSinger = c.getString(c.getColumnIndexOrThrow("artist"));
                             PlayMusic(firstPath);
                             status = MainActivity.isPlaying;
                             MainActivity.tv.setText(firstSong + " - " + firstSinger);
@@ -143,10 +129,11 @@ public class MusicService extends Service {
                 }
                 case MainActivity.NEXT_CLICKED:{
                     current++;
-                    if (current < 0) {
-                        current = count;
+                    if (current >= count) {
+                        current = 0;
                     }
                     PlayMusic(((MusicInfo) MusicListActivity.musicList.get(current)).getPath());
+                    MainActivity.tv.setText(((MusicInfo) MusicListActivity.musicList.get(current)).getTitle() + " - " + ((MusicInfo) MusicListActivity.musicList.get(current)).getArtist());
                     status = MainActivity.isPlaying;
                     break;
                 }
@@ -156,6 +143,7 @@ public class MusicService extends Service {
                         current = count;
                     }
                     PlayMusic(((MusicInfo) MusicListActivity.musicList.get(current)).getPath());
+                    MainActivity.tv.setText(((MusicInfo) MusicListActivity.musicList.get(current)).getTitle() + " - " + ((MusicInfo) MusicListActivity.musicList.get(current)).getArtist());
                     status = MainActivity.isPlaying;
                     break;
                 }

@@ -1,6 +1,7 @@
 package com.wanglin.simplemusicplayer;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
@@ -31,6 +33,7 @@ public class MusicListActivity extends ActionBarActivity {
 
     public static List<MusicInfo> musicList = new ArrayList<>();
     public static List<Map<String, Object>> list = new ArrayList<>();
+    public static int currentPosition = 0;
 
 
     public static final String[] AUDIO_KEYS = new String[]{
@@ -62,15 +65,24 @@ public class MusicListActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_list);
-
-
         getMusicList();
+        MusicService.count = MusicListActivity.musicList.size();
+
+        Button btn = (Button) findViewById(R.id.Btn_Load);
+        btn.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                getMusicList();
+                MusicService.count = MusicListActivity.musicList.size();
+            }
+        });
 
     }
 
    public void getMusicList(){
-
        final Cursor c = getContentResolver().query(Media.EXTERNAL_CONTENT_URI, AUDIO_KEYS, null, null, null);
+       if (musicList.size() == 0){
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
             Bundle bundle = new Bundle ();
             for (int i = 0; i < AUDIO_KEYS.length; i++) {
@@ -94,18 +106,17 @@ public class MusicListActivity extends ActionBarActivity {
                         String strValue = c.getString(columnIndex);
                         bundle.putString(key, strValue);
                         break;
-
                 }
             }
             MusicInfo audio = new MusicInfo (bundle);
-            musicList.add(audio);
+                musicList.add(audio);
+                Map<String, Object> map = new HashMap<>();
+                map.put("name", audio.getTitle());
+                map.put("artist", audio.getArtist());
+                list.add(map);
 
-            Map<String, Object> map = new HashMap<>();
-            map.put("name", c.getString(1));
-            map.put("artist", c.getString(3));
-            list.add(map);
         }
-
+       }
         ListView musicListView = (ListView) findViewById(R.id.musicListView);
         SimpleAdapter adapter = new SimpleAdapter(this, list, R.layout.showmusic, new String[] { "name", "artist" },  new int[] { R.id.name, R.id.artist });
         musicListView.setAdapter(adapter);
@@ -126,6 +137,8 @@ public class MusicListActivity extends ActionBarActivity {
                     MusicService.status = MainActivity.isStopped;
                     MainActivity.play.setText(R.string.pause);
                 }
+                currentPosition = position;
+
                 finish();
 
             }

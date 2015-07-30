@@ -87,7 +87,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CTL_ACTION);
-                intent.putExtra("control",PLAY_CLICKED);
+                intent.putExtra("control", PLAY_CLICKED);
                 sendBroadcast(intent);
             }
         });
@@ -185,6 +185,7 @@ public class MainActivity extends ActionBarActivity {
 
                 MusicService.PlayMusic(path);
                 MusicService.status = isPlaying;
+                MusicService.current = MusicListActivity.currentPosition;
 
                 tv.setText(song + " - " + singer);
             }
