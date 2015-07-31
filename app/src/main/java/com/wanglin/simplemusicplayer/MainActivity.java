@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -24,7 +25,8 @@ import java.util.Map;
 public class MainActivity extends ActionBarActivity {
 
     public static Button play, stop, next, previous,mList;
-    public static TextView tv;
+    public static TextView tv, playTimer;
+    public static SeekBar seekBar;
     ActivityReceiver activityReceiver;
     public static final String CTL_ACTION = "com.wanglin.action.CTL_ACTION";
     public static final String UPDATE_ACTION = "com.wanglin.action.UPDATE_ACTION";
@@ -100,6 +102,8 @@ public class MainActivity extends ActionBarActivity {
                 Intent intent = new Intent(CTL_ACTION);
                 intent.putExtra("control", STOP_CLICKED);
                 sendBroadcast(intent);
+                seekBar.setProgress(0);
+                playTimer.setText("00:00 / 00:00");
             }
         });
 
@@ -136,6 +140,27 @@ public class MainActivity extends ActionBarActivity {
         });
 
         tv = (TextView) findViewById(R.id.SongInfomation);
+        playTimer = (TextView) findViewById(R.id.playTimeText);
+
+        seekBar = (SeekBar) findViewById(R.id.seekBar);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser == true && MusicService.mPlayer != null){
+                    MusicService.mPlayer.seekTo(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
 

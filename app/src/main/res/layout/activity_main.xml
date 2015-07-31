@@ -67,4 +67,25 @@
         android:autoText="false"
         android:gravity="center_vertical" />
 
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:layout_above="@+id/Btn_Previous"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/Btn_Stop"
+        android:layout_alignEnd="@+id/Btn_Stop"
+        android:indeterminate="false" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00 / 00:00"
+        android:id="@+id/playTimeText"
+        android:layout_alignRight="@+id/seekBar"
+        android:layout_alignEnd="@+id/seekBar"
+        android:layout_above="@+id/seekBar"
+        android:textColor="#ff63a0bd" />
+
 </RelativeLayout>

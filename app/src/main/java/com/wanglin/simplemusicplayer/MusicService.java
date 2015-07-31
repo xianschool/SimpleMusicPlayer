@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.provider.MediaStore;
+import android.os.Handler;
 
 import java.io.IOException;
 
@@ -24,6 +25,16 @@ public class MusicService extends Service {
     String firstPath, firstSong, firstSinger;
     public MusicService() {
     }
+
+   static Handler hd = new Handler();
+    static Runnable updateThread = new Runnable() {
+        @Override
+        public void run() {
+            MainActivity.seekBar.setProgress(mPlayer.getCurrentPosition());
+            MainActivity.playTimer.setText(Utils.MilSecToMin(mPlayer.getCurrentPosition()) + " / " + Utils.MilSecToMin(mPlayer.getDuration()));
+            hd.postDelayed(updateThread, 100);
+        }
+    };
 
     @Override
     public void onCreate(){
@@ -69,6 +80,9 @@ public class MusicService extends Service {
             mPlayer.prepare();
 	            /* 开始播放 */
             mPlayer.start();
+
+            MainActivity.seekBar.setMax(mPlayer.getDuration());
+            hd.post(updateThread);
             mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
             {
                 public void onCompletion(MediaPlayer arg0)
@@ -152,6 +166,7 @@ public class MusicService extends Service {
                         mPlayer.stop();
                         status = MainActivity.isStopped;
                     }
+                    hd.removeCallbacks(updateThread);
                     break;
                 }
                 default:break;
