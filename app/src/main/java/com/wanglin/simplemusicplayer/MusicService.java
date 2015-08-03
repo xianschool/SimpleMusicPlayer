@@ -13,6 +13,8 @@ import android.os.Handler;
 
 import java.io.IOException;
 
+import static android.support.v4.app.ActivityCompat.startActivityForResult;
+
 public class MusicService extends Service {
 
     MusicServiceReceiver serviceReceiver;
