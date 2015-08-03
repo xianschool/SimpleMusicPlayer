@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -117,32 +118,40 @@ public class MusicListActivity extends ActionBarActivity {
 
         }
        }
-        ListView musicListView = (ListView) findViewById(R.id.musicListView);
-        SimpleAdapter adapter = new SimpleAdapter(this, list, R.layout.showmusic, new String[] { "name", "artist" },  new int[] { R.id.name, R.id.artist });
-        musicListView.setAdapter(adapter);
 
-        musicListView.setOnItemClickListener(new ListView.OnItemClickListener(){
+       if (list != null) {
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+           ListView musicListView = (ListView) findViewById(R.id.musicListView);
+           SimpleAdapter adapter = new SimpleAdapter(this, list, R.layout.showmusic, new String[]{"name", "artist"}, new int[]{R.id.name, R.id.artist});
+           musicListView.setAdapter(adapter);
 
-                c.moveToPosition(position);
-                int rowId = c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
-                Uri outURI = ContentUris.withAppendedId(Media.EXTERNAL_CONTENT_URI, rowId);
-                Intent outData = new Intent();
-                outData .setData(outURI);
-                setResult(Activity.RESULT_OK, outData);
-                if (MusicService.mPlayer != null){
-                    MusicService.mPlayer.stop();
-                    MusicService.status = MainActivity.isStopped;
-                    MainActivity.play.setText(R.string.pause);
-                }
-                currentPosition = position;
+           musicListView.setOnItemClickListener(new ListView.OnItemClickListener() {
 
-                finish();
+               @Override
+               public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            }
-        });
+                   c.moveToPosition(position);
+                   int rowId = c.getInt(c.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
+                   Uri outURI = ContentUris.withAppendedId(Media.EXTERNAL_CONTENT_URI, rowId);
+                   Intent outData = new Intent();
+                   outData.setData(outURI);
+                   setResult(Activity.RESULT_OK, outData);
+                   if (MusicService.mPlayer != null) {
+                       MusicService.mPlayer.stop();
+                       MusicService.status = MainActivity.isStopped;
+                       MainActivity.play.setText(R.string.pause);
+                   }
+                   currentPosition = position;
+
+                   finish();
+
+               }
+           });
+       }
+       else{
+           new AlertDialog.Builder(this).setTitle("提示").setMessage("未搜索到音频文件").setPositiveButton("好的", null).show();
+       }
+
     }
 
     @Override

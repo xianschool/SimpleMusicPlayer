@@ -118,20 +118,8 @@ public class MusicService extends Service {
             switch (control){
                 case MainActivity.PLAY_CLICKED :{
                     if (status == MainActivity.isStopped ){
-                        if (MainActivity.path == null){
-                            final Cursor c = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicListActivity.AUDIO_KEYS, null, null, null);
-                            c.moveToFirst();
-                            firstPath = c.getString(c.getColumnIndexOrThrow("_data"));
-                            firstSong = c.getString(c.getColumnIndexOrThrow("title"));
-                            firstSinger = c.getString(c.getColumnIndexOrThrow("artist"));
-                            PlayMusic(firstPath);
-                            status = MainActivity.isPlaying;
-                            MainActivity.tv.setText(firstSong + " - " + firstSinger);
-                        }
-                        else {
                             PlayMusic(MainActivity.path);
                             status = MainActivity.isPlaying;
-                        }
                     }
                     else if (status == MainActivity.isPlaying){
                         mPlayer.pause();

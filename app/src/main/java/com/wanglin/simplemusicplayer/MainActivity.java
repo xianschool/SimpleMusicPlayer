@@ -88,9 +88,14 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CTL_ACTION);
-                intent.putExtra("control", PLAY_CLICKED);
-                sendBroadcast(intent);
+                if (path == null){
+                    MainActivity.mList.performClick();
+                }
+                else {
+                    Intent intent = new Intent(CTL_ACTION);
+                    intent.putExtra("control", PLAY_CLICKED);
+                    sendBroadcast(intent);
+                }
             }
         });
 
